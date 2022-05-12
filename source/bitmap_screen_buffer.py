@@ -1,16 +1,14 @@
 import logging
 from pathlib import Path
+from time import time
 from typing import Tuple
 
+import numpy as np
+from PIL import Image
 from colorama import Style, Fore
 
-from source.color import colored
 from source.type.color_type import ColorType
 from source.type.window_type import WindowType
-
-import scipy.misc as smp
-from PIL import Image
-import numpy as np
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -33,6 +31,10 @@ class BitmapScreenBuffer:
         self.pixels = self.im.load()
 
         self.current_frame = 0
+
+        self.path_save = Path(f"frames_{int(time())}")
+
+        self.path_save.mkdir(exist_ok=True)
 
     def get_screen_offset(self, window: WindowType) -> int:
         offset = 0
@@ -229,10 +231,7 @@ class BitmapScreenBuffer:
         for it in range(1, self.screen_size_y - 1):
             self.buffer[it * self.screen_size_x] = '\n'
 
-        path_save = Path("frames")
-        path_save.mkdir(exist_ok=True)
-
-        self.im.save(path_save / f"frame_{self.current_frame:05d}.png")
+        self.im.save(self.path_save / f"frame_{self.current_frame:05d}.png")
         self.current_frame += 1
 
         return ''.join(self.buffer)
