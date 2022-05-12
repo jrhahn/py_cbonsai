@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 from typing import Tuple
 
 from colorama import Style, Fore
@@ -30,6 +31,8 @@ class BitmapScreenBuffer:
 
         self.im = Image.new('RGB', (screen_size_x * self.bitmap_size, screen_size_y * self.bitmap_size))
         self.pixels = self.im.load()
+
+        self.current_frame = 0
 
     def get_screen_offset(self, window: WindowType) -> int:
         offset = 0
@@ -226,6 +229,10 @@ class BitmapScreenBuffer:
         for it in range(1, self.screen_size_y - 1):
             self.buffer[it * self.screen_size_x] = '\n'
 
-        self.im.save('test.png')
+        path_save = Path("frames")
+        path_save.mkdir(exist_ok=True)
+
+        self.im.save(path_save / f"frame_{self.current_frame:05d}.png")
+        self.current_frame += 1
 
         return ''.join(self.buffer)

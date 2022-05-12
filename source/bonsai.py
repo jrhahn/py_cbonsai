@@ -393,6 +393,8 @@ class Bonsai:
 
             self.screen_buffer.wattroff()
 
+            self.screen_buffer.screen_buffer_to_string()
+
     def grow_tree(
             self,
             conf: BonsaiConfig,
